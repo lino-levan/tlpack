@@ -28,12 +28,11 @@ function buildOnce() {
 }
 
 export default function build(watch: boolean) {
+  buildOnce()
   if(watch) {
     fs.watch(path.dirname(config.entry), {recursive: true}, (event) => {
       buildOnce()
     })
-  } else {
-    buildOnce()
   }
 
   return true
