@@ -13,14 +13,15 @@ var fs = require("fs");
 var Logger_1 = require("./Logger");
 var path = require("path");
 var constants_1 = require("./constants");
-function getDependencies(filePath) {
-    if (fs.existsSync(filePath)) {
-        var file = fs.readFileSync(filePath, { encoding: 'utf-8' });
+function getDependencies(config, importedFile) {
+    var logger = new Logger_1.Logger(config.verbose);
+    if (fs.existsSync(importedFile.path)) {
+        var file = fs.readFileSync(importedFile.path, { encoding: 'utf-8' });
         var importStatements = Array.from(file.matchAll(constants_1.importStatementGroupRegexp));
         if (importStatements === null)
             return [];
         var imports_1 = importStatements.map(function (regexpMatch) {
-            var finalPath = path.join(path.resolve(path.dirname(filePath)), regexpMatch[1]);
+            var finalPath = path.join(path.resolve(path.dirname(importedFile.path)), regexpMatch[2]);
             if (!fs.existsSync(finalPath)) {
                 if (fs.existsSync(finalPath + '.js')) {
                     finalPath += '.js';
@@ -29,18 +30,19 @@ function getDependencies(filePath) {
                     finalPath += '.ts';
                 }
                 else {
-                    Logger_1.default.error("could not resolve import for \"" + regexpMatch + "\"");
+                    logger.error("could not resolve import for \"" + regexpMatch + "\"");
                 }
             }
-            return finalPath;
+            console.log(regexpMatch);
+            return { type: regexpMatch[1], path: finalPath };
         });
         imports_1.forEach(function (imp) {
-            imports_1 = __spreadArray(__spreadArray([], imports_1, true), getDependencies(imp), true);
+            imports_1 = __spreadArray(__spreadArray([], imports_1, true), getDependencies(config, imp), true);
         });
         return imports_1;
     }
     else {
-        Logger_1.default.error("file not found");
+        logger.error("file not found");
         return [];
     }
 }

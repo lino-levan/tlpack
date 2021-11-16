@@ -1,0 +1,1 @@
+function functionFromNested(){console.log("function from nested")}var $jscomp$destructuring$var0=function(){return{functionFromSecond:function(){functionFromNested()}}}(),functionFromSecond=$jscomp$destructuring$var0.functionFromSecond;function functionFromFirst(){console.log("from the first function")}functionFromFirst();functionFromSecond();

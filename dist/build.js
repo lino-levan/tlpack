@@ -16,16 +16,19 @@ var getConfig_1 = require("./utils/getConfig");
 var getDependencies_1 = require("./utils/getDependencies");
 var Logger_1 = require("./utils/Logger");
 var config = (0, getConfig_1.default)();
+var logger = new Logger_1.Logger(config.verbose);
 function buildOnce() {
     try {
-        Logger_1.default.success("build started");
-        Logger_1.default.time("build finished in");
-        var dependencies = __spreadArray([path.resolve(config.entry)], (0, getDependencies_1.default)(config.entry), true).reverse();
+        logger.success("build started");
+        logger.debug("loaded in verbose mode");
+        logger.time("build finished in");
+        var dependencies = __spreadArray([{ type: '*', path: path.resolve(config.entry) }], (0, getDependencies_1.default)(config, { type: '*', path: config.entry }), true).reverse();
+        logger.debug("got dependencies", dependencies.map(function (file) { return file.path; }).join(' '));
         (0, buildFile_1.default)(config, dependencies);
-        Logger_1.default.timeEnd("build finished in");
+        logger.timeEnd("build finished in");
     }
     catch (err) {
-        Logger_1.default.error("build failed");
+        logger.error("build failed");
     }
 }
 function build(watch) {

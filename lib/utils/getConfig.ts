@@ -2,9 +2,10 @@ import * as fs from 'fs';
 import * as path from 'path';
 import Logger from './Logger';
 
-let defaultConfig = {
+const defaultConfig = {
   entry: './src/index.js',
-  out: './dist/index.js'
+  out: './dist/index.js',
+  verbose: false
 }
 
 export default function getConfig() {

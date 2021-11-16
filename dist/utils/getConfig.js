@@ -16,7 +16,8 @@ var path = require("path");
 var Logger_1 = require("./Logger");
 var defaultConfig = {
     entry: './src/index.js',
-    out: './dist/index.js'
+    out: './dist/index.js',
+    verbose: false
 };
 function getConfig() {
     var configExists = fs.existsSync('./tlpack.config.json');

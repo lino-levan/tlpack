@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Logger = void 0;
 // console color codes from: https://stackoverflow.com/questions/9781218/how-to-change-node-jss-console-font-color
 var colorObj = {
     black: '\x1b[30m',
@@ -12,7 +13,9 @@ var colorObj = {
     white: '\x1b[37m'
 };
 var Logger = /** @class */ (function () {
-    function Logger() {
+    function Logger(verbose) {
+        this.verbose = false;
+        this.verbose = verbose;
     }
     Logger.prototype.printWithColor = function (color, text) {
         console.log(colorObj[color] + text);
@@ -22,35 +25,36 @@ var Logger = /** @class */ (function () {
         for (var _i = 0; _i < arguments.length; _i++) {
             args[_i] = arguments[_i];
         }
-        this.printWithColor('red', 'Error: ' + Array.from(args).join(''));
+        this.printWithColor('red', 'Error: ' + Array.from(args).join(' '));
     };
     Logger.prototype.warning = function () {
         var args = [];
         for (var _i = 0; _i < arguments.length; _i++) {
             args[_i] = arguments[_i];
         }
-        this.printWithColor('yellow', 'Warning: ' + Array.from(args).join(''));
+        this.printWithColor('yellow', 'Warning: ' + Array.from(args).join(' '));
     };
     Logger.prototype.success = function () {
         var args = [];
         for (var _i = 0; _i < arguments.length; _i++) {
             args[_i] = arguments[_i];
         }
-        this.printWithColor('green', Array.from(args).join(''));
+        this.printWithColor('green', Array.from(args).join(' '));
     };
     Logger.prototype.debug = function () {
         var args = [];
         for (var _i = 0; _i < arguments.length; _i++) {
             args[_i] = arguments[_i];
         }
-        this.printWithColor('white', Array.from(args).join(''));
+        if (this.verbose)
+            this.printWithColor('white', Array.from(args).join(' '));
     };
     Logger.prototype.print = function (color) {
         var args = [];
         for (var _i = 1; _i < arguments.length; _i++) {
             args[_i - 1] = arguments[_i];
         }
-        this.printWithColor(color, Array.from(args).join(''));
+        this.printWithColor(color, Array.from(args).join(' '));
     };
     Logger.prototype.time = function (name) {
         console.time(name);
@@ -61,5 +65,6 @@ var Logger = /** @class */ (function () {
     };
     return Logger;
 }());
-var logger = new Logger();
+exports.Logger = Logger;
+var logger = new Logger(false);
 exports.default = logger;

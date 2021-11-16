@@ -1,5 +1,7 @@
 declare type colorName = 'black' | 'red' | 'green' | 'yellow' | 'blue' | 'magenta' | 'cyan' | 'white';
-declare class Logger {
+export declare class Logger {
+    verbose: boolean;
+    constructor(verbose: boolean);
     private printWithColor;
     error(...args: string[]): void;
     warning(...args: string[]): void;

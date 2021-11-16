@@ -1,5 +1,5 @@
-import first from './first'
+import * from './first'
 import second from './second'
 
 functionFromFirst()
-functionFromSecond()
+second.functionFromSecond()

@@ -1,18 +1,20 @@
 import * as fs from 'fs';
-import Logger from './Logger';
+import { Logger } from './Logger';
 import * as path from 'path';
-import { importStatementGroupRegexp } from './constants';
+import { configShape, importedFileShape, importStatementGroupRegexp } from './constants';
 
-export default function getDependencies(filePath: string): string[] {
-  if(fs.existsSync(filePath)) {
-    let file = fs.readFileSync(filePath, {encoding: 'utf-8'})
+export default function getDependencies(config: configShape, importedFile: importedFileShape): importedFileShape[] {
+  let logger = new Logger(config.verbose)
+
+  if(fs.existsSync(importedFile.path)) {
+    let file = fs.readFileSync(importedFile.path, {encoding: 'utf-8'})
     let importStatements = Array.from(file.matchAll(importStatementGroupRegexp))
 
     if (importStatements === null)
       return []
 
     let imports = importStatements.map(regexpMatch => {
-      let finalPath = path.join(path.resolve(path.dirname(filePath)), regexpMatch[1])
+      let finalPath = path.join(path.resolve(path.dirname(importedFile.path)), regexpMatch[2])
 
       if(!fs.existsSync(finalPath)) {
         if(fs.existsSync(finalPath+'.js')) {
@@ -20,20 +22,21 @@ export default function getDependencies(filePath: string): string[] {
         } else if(fs.existsSync(finalPath+'.ts')) {
           finalPath += '.ts'
         } else {
-          Logger.error(`could not resolve import for "${regexpMatch}"`)
+          logger.error(`could not resolve import for "${regexpMatch}"`)
         }
       }
 
-      return finalPath
+      console.log(regexpMatch)
+      return { type: regexpMatch[1], path: finalPath }
     })
 
     imports.forEach((imp) => {
-      imports = [...imports, ...getDependencies(imp)]
+      imports = [...imports, ...getDependencies(config, imp)]
     })
 
     return imports
   } else {
-    Logger.error("file not found")
+    logger.error("file not found")
     return []
   }
 }

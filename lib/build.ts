@@ -3,22 +3,27 @@ import * as path from 'path';
 import buildFile from './utils/buildFile';
 import getConfig from './utils/getConfig';
 import getDependencies from './utils/getDependencies';
-import Logger from './utils/Logger';
+import { Logger } from './utils/Logger';
 
 let config = getConfig()
+let logger = new Logger(config.verbose)
 
 function buildOnce() {
   try {
-    Logger.success("build started")
-    Logger.time("build finished in")
-    let dependencies = [path.resolve(config.entry), ...getDependencies(config.entry)].reverse()
+    logger.success("build started")
+    logger.debug("loaded in verbose mode")
+
+    logger.time("build finished in")
+    let dependencies = [{type: '*', path: path.resolve(config.entry)}, ...getDependencies(config, {type: '*', path:config.entry})].reverse()
+
+    logger.debug("got dependencies", dependencies.map((file)=>file.path).join(' '))
 
     buildFile(config, dependencies)
 
-    Logger.timeEnd("build finished in")
+    logger.timeEnd("build finished in")
   }
   catch(err) {
-    Logger.error("build failed")
+    logger.error("build failed")
   }
 }
 

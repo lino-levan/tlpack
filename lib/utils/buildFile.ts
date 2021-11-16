@@ -1,14 +1,45 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import { importStatementRegexp } from './constants';
+import { configShape, exportGroupRegexp, exportRegexp, importedFileShape, importStatementRegexp } from './constants';
 
 const compressor = require('node-minify')
 
-export default function buildFile(config: any, dependencies: string[]) {
+export default function buildFile(config: configShape, dependencies: importedFileShape[]) {
   let finalFile = ''
 
   dependencies.forEach((depedency) => {
-    finalFile += fs.readFileSync(depedency, {encoding: 'utf-8'}).split(importStatementRegexp).join('') + '\n'
+    let processedFile = fs.readFileSync(depedency.path, {encoding: 'utf-8'})
+
+    processedFile = processedFile.split(importStatementRegexp).join('')
+
+    if(depedency.type !== '*') {
+      let exportStatements = Array.from(processedFile.matchAll(exportGroupRegexp))
+
+      console.log(exportStatements)
+
+      let returnStatement = '{'
+
+      exportStatements.forEach((exportStatement) => {
+        if(exportStatement[1] === 'function') {
+          returnStatement += exportStatement[2].replace('()', '')
+        } else {
+          returnStatement += exportStatement[2]
+        }
+
+        returnStatement += ', '
+      })
+
+      returnStatement += '}'
+
+      processedFile = `
+        let ${depedency.type} = (function () {
+          ${processedFile.replace(exportRegexp, '')}
+
+          return ${returnStatement}
+        })()`
+    }
+
+    finalFile += processedFile + '\n'
   })
 
   fs.mkdirSync(path.dirname(config.out), { recursive: true })

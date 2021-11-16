@@ -14,29 +14,36 @@ const colorObj = {
   white: '\x1b[37m'
 }
 
-class Logger {
+export class Logger {
+  verbose: boolean = false
+
+  constructor(verbose: boolean) {
+    this.verbose = verbose
+  }
+
   private printWithColor(color: colorName, text: string) {
     console.log(colorObj[color]+text)
   }
 
   error(...args: string[]) {
-    this.printWithColor('red', 'Error: ' + Array.from(args).join(''))
+    this.printWithColor('red', 'Error: ' + Array.from(args).join(' '))
   }
 
   warning(...args: string[]) {
-    this.printWithColor('yellow', 'Warning: ' + Array.from(args).join(''))
+    this.printWithColor('yellow', 'Warning: ' + Array.from(args).join(' '))
   }
 
   success(...args: string[]) {
-    this.printWithColor('green', Array.from(args).join(''))
+    this.printWithColor('green', Array.from(args).join(' '))
   }
 
   debug(...args: string[]) {
-    this.printWithColor('white', Array.from(args).join(''))
+    if(this.verbose)
+      this.printWithColor('white', Array.from(args).join(' '))
   }
 
   print(color: colorName, ...args: string[]) {
-    this.printWithColor(color, Array.from(args).join(''))
+    this.printWithColor(color, Array.from(args).join(' '))
   }
 
   time(name: string) {
@@ -49,6 +56,6 @@ class Logger {
   }
 }
 
-let logger = new Logger()
+let logger = new Logger(false)
 
 export default logger

@@ -9,3 +9,54 @@ If you'd like to contribute, make a pull request and I'll go through changes whe
 ## Installation
 
 Installation: `npm i -g tlpack`
+
+
+## Usage
+
+To compile once: `tlpack`
+
+To compile when changes are detected: `tlpack watch`
+
+### tlpack.config.json
+
+Default config if none specified:
+
+```js
+{
+  "entry": "./src/index.js", // where the packer will start packing
+  "out": "./dist/index.js", // where the packer will output the file
+  "verbose": false // whether to packer should print debug logs or not
+}
+```
+
+### Modules
+
+This packer assumes that you are using the es6 module syntax.
+
+It also adds a * expression which removes the namespace
+
+```js
+// valid syntax
+import * from './example.js'
+example()
+
+import * from './example'
+example()
+
+import example from './example.js'
+example.example()
+
+import example from './example'
+example.example()
+```
+
+The following are not valid
+
+```js
+// invalid syntax
+import * as example from './example.js'
+example.example()
+
+let example = require('./example')
+example.example()
+```
