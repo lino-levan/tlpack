@@ -1,1 +1,1 @@
-export default function buildFile(dependencies: string[]): void;
+export default function buildFile(config: any, dependencies: string[]): void;

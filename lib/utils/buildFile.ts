@@ -1,13 +1,10 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { importStatementRegexp } from './constants';
-import getConfig from './getConfig';
 
 const compressor = require('node-minify')
 
-let config = getConfig()
-
-export default function buildFile(dependencies: string[]) {
+export default function buildFile(config: any, dependencies: string[]) {
   let finalFile = ''
 
   dependencies.forEach((depedency) => {
