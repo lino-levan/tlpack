@@ -51,7 +51,10 @@ export default function buildFile(config: configShape, dependencies: importedFil
   compressor.minify({
     compressor: 'gcc',
     input: config.out,
-    output: config.out
+    output: config.out,
+    options: {
+      compilationLevel: config.compilationLevel
+    }
   }).catch((err: any) => {
     logger.error(`failed to minify, error in code\n${err}`)
     fs.writeFileSync(config.out, finalFile)

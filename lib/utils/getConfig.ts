@@ -1,14 +1,16 @@
 import * as fs from 'fs';
 import * as path from 'path';
+import { compilationLevelType, configShape } from './constants';
 import Logger from './Logger';
 
 const defaultConfig = {
   entry: './src/index.js',
   out: './dist/index.js',
+  compilationLevel: 'SIMPLE' as compilationLevelType,
   verbose: false
 }
 
-export default function getConfig() {
+export default function getConfig(): configShape {
   let configExists = fs.existsSync('./tlpack.config.json')
   let config = defaultConfig
 

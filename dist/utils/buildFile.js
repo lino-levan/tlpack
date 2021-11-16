@@ -34,7 +34,10 @@ function buildFile(config, dependencies) {
     compressor.minify({
         compressor: 'gcc',
         input: config.out,
-        output: config.out
+        output: config.out,
+        options: {
+            compilationLevel: config.compilationLevel
+        }
     }).catch(function (err) {
         logger.error("failed to minify, error in code\n" + err);
         fs.writeFileSync(config.out, finalFile);

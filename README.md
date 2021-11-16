@@ -24,9 +24,10 @@ Default config if none specified:
 
 ```js
 {
-  "entry": "./src/index.js", // where the packer will start packing
-  "out": "./dist/index.js", // where the packer will output the file
-  "verbose": false // whether to packer should print debug logs or not
+  "entry": "./src/index.js", // where the packer will start packing (filePath)
+  "out": "./dist/index.js", // where the packer will output the file (filePath)
+  "verbose": false, // whether to packer should print debug logs or not (boolean)
+  "compilationLevel": "SIMPLE" // determines how much to compile the output javascript with gcc ("WHITESPACE_ONLY", "SIMPLE", "ADVANCED")
 }
 ```
 

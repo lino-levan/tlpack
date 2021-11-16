@@ -17,6 +17,7 @@ var Logger_1 = require("./Logger");
 var defaultConfig = {
     entry: './src/index.js',
     out: './dist/index.js',
+    compilationLevel: 'SIMPLE',
     verbose: false
 };
 function getConfig() {

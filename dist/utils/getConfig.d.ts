@@ -1,5 +1,2 @@
-export default function getConfig(): {
-    entry: string;
-    out: string;
-    verbose: boolean;
-};
+import { configShape } from './constants';
+export default function getConfig(): configShape;
