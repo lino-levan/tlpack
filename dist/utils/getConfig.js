@@ -19,11 +19,11 @@ var defaultConfig = {
     out: './dist/index.js'
 };
 function getConfig() {
-    var configExists = fs.existsSync('./tspack.config.json');
+    var configExists = fs.existsSync('./tlpack.config.json');
     var config = defaultConfig;
     if (configExists) {
         try {
-            config = __assign(__assign({}, config), JSON.parse(fs.readFileSync('./tspack.config.json', { encoding: 'utf-8' })));
+            config = __assign(__assign({}, config), JSON.parse(fs.readFileSync('./tlpack.config.json', { encoding: 'utf-8' })));
             Logger_1.default.success("found and loaded configuration file");
         }
         catch (err) {
@@ -37,7 +37,7 @@ function getConfig() {
         }
     }
     else {
-        Logger_1.default.warning("no configuration file found, consider creating a \"tspack.config.json\" file");
+        Logger_1.default.warning("no configuration file found, consider creating a \"tlpack.config.json\" file");
     }
     return config;
 }

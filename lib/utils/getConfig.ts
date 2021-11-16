@@ -8,12 +8,12 @@ let defaultConfig = {
 }
 
 export default function getConfig() {
-  let configExists = fs.existsSync('./tspack.config.json')
+  let configExists = fs.existsSync('./tlpack.config.json')
   let config = defaultConfig
 
   if(configExists) {
     try {
-      config = {...config, ...JSON.parse(fs.readFileSync('./tspack.config.json', {encoding: 'utf-8'}))}
+      config = {...config, ...JSON.parse(fs.readFileSync('./tlpack.config.json', {encoding: 'utf-8'}))}
       Logger.success("found and loaded configuration file")
     }
     catch(err) {
@@ -28,7 +28,7 @@ export default function getConfig() {
     }
 
   } else {
-    Logger.warning("no configuration file found, consider creating a \"tspack.config.json\" file")
+    Logger.warning("no configuration file found, consider creating a \"tlpack.config.json\" file")
   }
 
   return config
