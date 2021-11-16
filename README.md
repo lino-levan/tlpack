@@ -8,8 +8,9 @@ If you'd like to contribute, make a pull request and I'll go through changes whe
 
 ## Installation
 
-Installation: `npm i -g tlpack`
+Local Installation: `npm i tlpack`
 
+Global Installation: `npm i -g tlpack`
 
 ## Usage
 
@@ -48,6 +49,12 @@ example.example()
 
 import example from './example'
 example.example()
+
+import { example } from './example.js'
+example()
+
+import { example } from './example'
+example()
 ```
 
 The following are not valid
