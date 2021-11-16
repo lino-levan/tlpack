@@ -32,13 +32,11 @@ function buildOnce() {
     }
 }
 function build(watch) {
+    buildOnce();
     if (watch) {
         fs.watch(path.dirname(config.entry), { recursive: true }, function (event) {
             buildOnce();
         });
-    }
-    else {
-        buildOnce();
     }
     return true;
 }

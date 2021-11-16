@@ -26,7 +26,6 @@ export default function getDependencies(config: configShape, importedFile: impor
         }
       }
 
-      console.log(regexpMatch)
       return { type: regexpMatch[1], path: finalPath }
     })
 

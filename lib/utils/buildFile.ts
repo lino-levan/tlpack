@@ -1,10 +1,12 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { configShape, exportGroupRegexp, exportRegexp, importedFileShape, importStatementRegexp } from './constants';
+import { Logger } from './Logger';
 
 const compressor = require('node-minify')
 
 export default function buildFile(config: configShape, dependencies: importedFileShape[]) {
+  let logger = new Logger(config.verbose)
   let finalFile = ''
 
   dependencies.forEach((depedency) => {
@@ -14,8 +16,6 @@ export default function buildFile(config: configShape, dependencies: importedFil
 
     if(depedency.type !== '*') {
       let exportStatements = Array.from(processedFile.matchAll(exportGroupRegexp))
-
-      console.log(exportStatements)
 
       let returnStatement = '{'
 
@@ -46,9 +46,16 @@ export default function buildFile(config: configShape, dependencies: importedFil
 
   fs.writeFileSync(config.out, finalFile)
 
+  logger.debug('done compiling, optimizing...')
+
   compressor.minify({
     compressor: 'gcc',
     input: config.out,
     output: config.out
+  }).catch((err: any) => {
+    logger.error(`failed to minify, error in code\n${err}`)
+    fs.writeFileSync(config.out, finalFile)
   })
+
+  logger.debug('minified and optimized...')
 }

@@ -33,7 +33,6 @@ function getDependencies(config, importedFile) {
                     logger.error("could not resolve import for \"" + regexpMatch + "\"");
                 }
             }
-            console.log(regexpMatch);
             return { type: regexpMatch[1], path: finalPath };
         });
         imports_1.forEach(function (imp) {
