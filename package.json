@@ -1,6 +1,6 @@
 {
   "name": "tlpack",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "",
   "repository": "git@github.com:lino-levan/tlpack.git",
   "main": "dist/index.js",
@@ -9,8 +9,7 @@
   "scripts": {
     "prepublish": "npm run build",
     "build": "tsc",
-    "dev": "tsc --watch",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "tsc --watch"
   },
   "keywords": [],
   "author": "Lino Le Van",

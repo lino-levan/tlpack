@@ -14,7 +14,7 @@ function buildOnce() {
     logger.debug("loaded in verbose mode")
 
     logger.time("build finished in")
-    let dependencies = [{type: '*', path: path.resolve(config.entry)}, ...getDependencies(config, {type: '*', path:config.entry})].reverse()
+    let dependencies = [{type: 'es6', name: '*', path: path.resolve(config.entry)}, ...getDependencies(config, {type: 'es6', name: '*', path:config.entry})].reverse()
 
     logger.debug("got dependencies", dependencies.map((file)=>file.path).join(' '))
 

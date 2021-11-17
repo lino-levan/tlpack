@@ -9,9 +9,10 @@ function buildFile(config, dependencies) {
     var logger = new Logger_1.Logger(config.verbose);
     var finalFile = '';
     dependencies.forEach(function (depedency) {
+        var varType = depedency.varType ? depedency.varType : 'let';
         var processedFile = fs.readFileSync(depedency.path, { encoding: 'utf-8' });
-        processedFile = processedFile.split(constants_1.importStatementRegexp).join('');
-        if (depedency.type !== '*') {
+        processedFile = processedFile.replace(constants_1.importES6Regexp, '').replace(constants_1.importRequireRegexp, '');
+        if (depedency.type === 'es6' && depedency.name !== '*') {
             var exportStatements = Array.from(processedFile.matchAll(constants_1.exportGroupRegexp));
             var returnStatement_1 = '{';
             exportStatements.forEach(function (exportStatement) {
@@ -24,7 +25,22 @@ function buildFile(config, dependencies) {
                 returnStatement_1 += ', ';
             });
             returnStatement_1 += '}';
-            processedFile = "\n        let " + depedency.type + " = (function () {\n          " + processedFile.replace(constants_1.exportRegexp, '') + "\n\n          return " + returnStatement_1 + "\n        })()";
+            processedFile = "\n        " + varType + " " + depedency.name + " = (function () {\n          " + processedFile.replace(constants_1.exportRegexp, '') + "\n\n          return " + returnStatement_1 + "\n        })()";
+        }
+        if (depedency.type === 'commonjs') {
+            var exportStatements = Array.from(processedFile.matchAll(constants_1.exportGroupRegexp));
+            var returnStatement_2 = '{';
+            exportStatements.forEach(function (exportStatement) {
+                if (exportStatement[1] === 'function') {
+                    returnStatement_2 += exportStatement[2].replace('()', '');
+                }
+                else {
+                    returnStatement_2 += exportStatement[2];
+                }
+                returnStatement_2 += ', ';
+            });
+            returnStatement_2 += '}';
+            processedFile = "\n        " + varType + " " + depedency.name + " = (function () {\n          let module = {exports:\"invalid\"}\n\n          " + processedFile + "\n\n          return module.exports\n        })()";
         }
         finalFile += processedFile + '\n';
     });

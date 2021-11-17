@@ -24,47 +24,66 @@ Default config if none specified:
 
 ```js
 {
-  "entry": "./src/index.js", // where the packer will start packing (filePath)
-  "out": "./dist/index.js", // where the packer will output the file (filePath)
-  "verbose": false, // whether to packer should print debug logs or not (boolean)
+  "entry": "./src/index.js", // where the bundler will start packing (filePath)
+  "out": "./dist/index.js", // where the bundler will output the file (filePath)
+  "verbose": false, // whether to bundler should print debug logs or not (boolean)
   "compilationLevel": "SIMPLE" // determines how much to compile the output javascript with gcc ("WHITESPACE_ONLY", "SIMPLE", "ADVANCED")
 }
 ```
 
 ### Modules
 
-This packer assumes that you are using the es6 module syntax.
+This bundler assumes that you are using the es6 and/or commonjs module syntax (You can use both).
+
+This bundler also does not require specifying file extension.
 
 It also adds a * expression which removes the namespace
 
 ```js
-// valid syntax
+// import all functions (there should be no "export" statements in this file)
+// functionally the same as copy-pasting the file in the place of the import statement
 import * from './example.js'
 example()
 
-import * from './example'
-example()
-
+// imports all of the exports as an object (currently doesn't have export default capability)
 import example from './example.js'
 example.example()
 
 import example from './example'
 example.example()
 
+// imports individual exports
 import { example } from './example.js'
 example()
 
 import { example } from './example'
 example()
+
+// imports value stored in module.exports
+const example = require('./example')
+example()
+
+var example = require('./example.js')
+example()
+
+let example = require('./example')
+example()
 ```
 
-The following are not valid
+The following are not valid yet
 
 ```js
-// invalid syntax
+// aliases are not currently implemented
 import * as example from './example.js'
 example.example()
 
-let example = require('./example')
-example.example()
+// multiple imports aren't currently implemented
+import defaultImport, { exampleExport } from './example.js'
+
+// default exports aren't currently implemented
+import exampleFunction from './example'
+exampleFunction()
+
+// import/require statements aren't currently implemented
+import example = require('./example')
 ```

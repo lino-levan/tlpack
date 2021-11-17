@@ -1,6 +1,6 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import { configShape, exportGroupRegexp, exportRegexp, importedFileShape, importStatementRegexp } from './constants';
+import { configShape, exportGroupRegexp, exportRegexp, importedFileShape, importES6Regexp, importRequireRegexp } from './constants';
 import { Logger } from './Logger';
 
 const compressor = require('node-minify')
@@ -10,11 +10,13 @@ export default function buildFile(config: configShape, dependencies: importedFil
   let finalFile = ''
 
   dependencies.forEach((depedency) => {
+    let varType = depedency.varType? depedency.varType : 'let'
+
     let processedFile = fs.readFileSync(depedency.path, {encoding: 'utf-8'})
 
-    processedFile = processedFile.split(importStatementRegexp).join('')
+    processedFile = processedFile.replace(importES6Regexp, '').replace(importRequireRegexp, '')
 
-    if(depedency.type !== '*') {
+    if(depedency.type === 'es6' && depedency.name !== '*') {
       let exportStatements = Array.from(processedFile.matchAll(exportGroupRegexp))
 
       let returnStatement = '{'
@@ -32,10 +34,37 @@ export default function buildFile(config: configShape, dependencies: importedFil
       returnStatement += '}'
 
       processedFile = `
-        let ${depedency.type} = (function () {
+        ${varType} ${depedency.name} = (function () {
           ${processedFile.replace(exportRegexp, '')}
 
           return ${returnStatement}
+        })()`
+    }
+
+    if(depedency.type === 'commonjs') {
+      let exportStatements = Array.from(processedFile.matchAll(exportGroupRegexp))
+
+      let returnStatement = '{'
+
+      exportStatements.forEach((exportStatement) => {
+        if(exportStatement[1] === 'function') {
+          returnStatement += exportStatement[2].replace('()', '')
+        } else {
+          returnStatement += exportStatement[2]
+        }
+
+        returnStatement += ', '
+      })
+
+      returnStatement += '}'
+
+      processedFile = `
+        ${varType} ${depedency.name} = (function () {
+          let module = {exports:"invalid"}
+
+          ${processedFile}
+
+          return module.exports
         })()`
     }
 

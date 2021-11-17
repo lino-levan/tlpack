@@ -22,7 +22,7 @@ function buildOnce() {
         logger.success("build started");
         logger.debug("loaded in verbose mode");
         logger.time("build finished in");
-        var dependencies = __spreadArray([{ type: '*', path: path.resolve(config.entry) }], (0, getDependencies_1.default)(config, { type: '*', path: config.entry }), true).reverse();
+        var dependencies = __spreadArray([{ type: 'es6', name: '*', path: path.resolve(config.entry) }], (0, getDependencies_1.default)(config, { type: 'es6', name: '*', path: config.entry }), true).reverse();
         logger.debug("got dependencies", dependencies.map(function (file) { return file.path; }).join(' '));
         (0, buildFile_1.default)(config, dependencies);
         logger.timeEnd("build finished in");
