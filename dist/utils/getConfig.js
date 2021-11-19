@@ -11,10 +11,11 @@ var __assign = (this && this.__assign) || function () {
     return __assign.apply(this, arguments);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.defaultConfig = void 0;
 var fs = require("fs");
 var path = require("path");
 var Logger_1 = require("./Logger");
-var defaultConfig = {
+exports.defaultConfig = {
     entry: './src/index.js',
     out: './dist/index.js',
     compilationLevel: 'SIMPLE',
@@ -22,7 +23,7 @@ var defaultConfig = {
 };
 function getConfig() {
     var configExists = fs.existsSync('./tlpack.config.json');
-    var config = defaultConfig;
+    var config = exports.defaultConfig;
     if (configExists) {
         try {
             config = __assign(__assign({}, config), JSON.parse(fs.readFileSync('./tlpack.config.json', { encoding: 'utf-8' })));

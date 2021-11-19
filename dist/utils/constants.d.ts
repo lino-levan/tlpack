@@ -6,6 +6,7 @@ export declare const exportRegexp: RegExp;
 export declare const exportGroupRegexp: RegExp;
 export declare type compilationLevelType = 'WHITESPACE_ONLY' | 'SIMPLE' | 'ADVANCED';
 export declare type varType = 'let' | 'const' | 'var';
+export declare type commandTypes = 'watch' | 'version';
 export interface configShape {
     entry: string;
     out: string;
@@ -19,3 +20,4 @@ export interface importedFileShape {
     varType?: varType;
 }
 export declare function hash(string: string): string;
+export declare function getVersion(): any;

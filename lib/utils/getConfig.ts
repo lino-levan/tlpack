@@ -3,7 +3,7 @@ import * as path from 'path';
 import { compilationLevelType, configShape } from './constants';
 import Logger from './Logger';
 
-const defaultConfig = {
+export const defaultConfig = {
   entry: './src/index.js',
   out: './dist/index.js',
   compilationLevel: 'SIMPLE' as compilationLevelType,

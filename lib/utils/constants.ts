@@ -1,4 +1,5 @@
-import * as crypto from 'crypto';
+import * as crypto from 'crypto'
+import * as fs from 'fs'
 
 export const importES6GroupRegexp = /import\s(.+)\sfrom\s["'](.+)["']/gm
 export const importES6Regexp = /import\s.+\sfrom\s["'].+["']/gm
@@ -9,6 +10,7 @@ export const exportGroupRegexp = /export\s(\S+)\s(\S+)/gm
 
 export type compilationLevelType = 'WHITESPACE_ONLY' | 'SIMPLE' | 'ADVANCED'
 export type varType = 'let' | 'const' | 'var'
+export type commandTypes = 'watch' | 'version'
 
 export interface configShape {
   entry: string,
@@ -25,4 +27,8 @@ export interface importedFileShape {
 
 export function hash(string: string) {
   return crypto.createHash('md5').update(string).digest('hex')
+}
+
+export function getVersion() {
+  return JSON.parse(fs.readFileSync('../../package.json', {encoding: 'utf-8'})).version
 }

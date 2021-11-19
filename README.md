@@ -12,11 +12,13 @@ Local Installation: `npm i tlpack`
 
 Global Installation: `npm i -g tlpack`
 
-## Usage
+## Use
 
 To compile once: `tlpack`
 
 To compile when changes are detected: `tlpack watch`
+
+To check the version: `tlpack version`
 
 ### tlpack.config.json
 
