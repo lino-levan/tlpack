@@ -20,4 +20,4 @@ export interface importedFileShape {
     varType?: varType;
 }
 export declare function hash(string: string): string;
-export declare function getVersion(): any;
+export declare const version = "1.0.10";

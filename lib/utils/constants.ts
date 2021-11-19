@@ -29,6 +29,4 @@ export function hash(string: string) {
   return crypto.createHash('md5').update(string).digest('hex')
 }
 
-export function getVersion() {
-  return JSON.parse(fs.readFileSync('../../package.json', {encoding: 'utf-8'})).version
-}
+export const version = '1.0.10'

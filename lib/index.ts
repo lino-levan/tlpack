@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 import build from './build'
-import { commandTypes, getVersion } from './utils/constants'
+import { commandTypes, version } from './utils/constants'
 
 const commands = {
   watch: ()=>build(true),
-  version: ()=>console.log(`TLPack version: ${getVersion()}`)
+  version: ()=>console.log(`TLPack version: ${version}`)
 }
 
 if(process.argv.length > 2) {

@@ -1,6 +1,6 @@
 {
   "name": "tlpack",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "description": "",
   "repository": "git@github.com:lino-levan/tlpack.git",
   "main": "dist/index.js",
@@ -8,7 +8,7 @@
   "bin": "dist/index.js",
   "scripts": {
     "prepublish": "npm run build",
-    "build": "tsc",
+    "build": "tsc && node ./dist/utils/prepublish",
     "dev": "tsc --watch"
   },
   "keywords": [],

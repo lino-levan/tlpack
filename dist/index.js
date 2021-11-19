@@ -5,7 +5,7 @@ var build_1 = require("./build");
 var constants_1 = require("./utils/constants");
 var commands = {
     watch: function () { return (0, build_1.default)(true); },
-    version: function () { return console.log("TLPack version: " + (0, constants_1.getVersion)()); }
+    version: function () { return console.log("TLPack version: " + constants_1.version); }
 };
 if (process.argv.length > 2) {
     if (commands.hasOwnProperty(process.argv[2])) {
