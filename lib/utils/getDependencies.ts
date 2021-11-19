@@ -3,7 +3,7 @@ import { Logger } from './Logger';
 import * as path from 'path';
 import { configShape, importedFileShape, importES6GroupRegexp, importRequireGroupRegexp, varType } from './constants';
 
-function generatePath(from: string, name: string) {
+export function generatePath(from: string, name: string) {
   let finalPath = path.join(path.resolve(path.dirname(from)), name)
   
   if(!fs.existsSync(finalPath)) {

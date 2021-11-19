@@ -3,15 +3,30 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var fs = require("fs");
 var path = require("path");
 var constants_1 = require("./constants");
+var getDependencies_1 = require("./getDependencies");
 var Logger_1 = require("./Logger");
 var compressor = require('node-minify');
 function buildFile(config, dependencies) {
     var logger = new Logger_1.Logger(config.verbose);
-    var finalFile = '';
+    var finalFile = "\n    function require(file) {\n      let files = {\n        " + (function () {
+        var output = '';
+        dependencies.forEach(function (depedency) {
+            if (depedency.type === 'commonjs') {
+                var processedFile = fs.readFileSync(depedency.path, { encoding: 'utf-8' });
+                output += "\"" + (0, constants_1.hash)(depedency.path) + "\": (()=> {\n                  let module = {exports:\"invalid\"}\n                  " + processedFile + "\n                  return module.exports\n                })()";
+            }
+        });
+        return output;
+    })() + "\n      }\n      return files[file]\n    }\n  ";
     dependencies.forEach(function (depedency) {
+        if (depedency.type === 'commonjs')
+            return;
         var varType = depedency.varType ? depedency.varType : 'let';
         var processedFile = fs.readFileSync(depedency.path, { encoding: 'utf-8' });
-        processedFile = processedFile.replace(constants_1.importES6Regexp, '').replace(constants_1.importRequireRegexp, '');
+        processedFile = processedFile.replace(constants_1.importES6Regexp, '');
+        processedFile = processedFile.replace(constants_1.importRequireGroupRegexp, function (match, variable, name, path) {
+            return variable + " " + name + " = require(\"" + (0, constants_1.hash)((0, getDependencies_1.generatePath)(depedency.path, path)) + "\")";
+        });
         if (depedency.type === 'es6' && depedency.name !== '*') {
             var exportStatements = Array.from(processedFile.matchAll(constants_1.exportGroupRegexp));
             var returnStatement_1 = '{';
@@ -26,21 +41,6 @@ function buildFile(config, dependencies) {
             });
             returnStatement_1 += '}';
             processedFile = "\n        " + varType + " " + depedency.name + " = (function () {\n          " + processedFile.replace(constants_1.exportRegexp, '') + "\n\n          return " + returnStatement_1 + "\n        })()";
-        }
-        if (depedency.type === 'commonjs') {
-            var exportStatements = Array.from(processedFile.matchAll(constants_1.exportGroupRegexp));
-            var returnStatement_2 = '{';
-            exportStatements.forEach(function (exportStatement) {
-                if (exportStatement[1] === 'function') {
-                    returnStatement_2 += exportStatement[2].replace('()', '');
-                }
-                else {
-                    returnStatement_2 += exportStatement[2];
-                }
-                returnStatement_2 += ', ';
-            });
-            returnStatement_2 += '}';
-            processedFile = "\n        " + varType + " " + depedency.name + " = (function () {\n          let module = {exports:\"invalid\"}\n\n          " + processedFile + "\n\n          return module.exports\n        })()";
         }
         finalFile += processedFile + '\n';
     });

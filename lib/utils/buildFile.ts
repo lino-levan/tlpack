@@ -1,20 +1,53 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import { configShape, exportGroupRegexp, exportRegexp, importedFileShape, importES6Regexp, importRequireRegexp } from './constants';
+import { configShape, exportGroupRegexp, exportRegexp, hash, importedFileShape, importES6Regexp, importRequireGroupRegexp } from './constants';
+import { generatePath } from './getDependencies';
 import { Logger } from './Logger';
 
 const compressor = require('node-minify')
 
 export default function buildFile(config: configShape, dependencies: importedFileShape[]) {
   let logger = new Logger(config.verbose)
-  let finalFile = ''
+  let finalFile = `
+    function require(file) {
+      let files = {
+        ${
+          (()=>{
+            let output = ''
+
+            dependencies.forEach((depedency) => {
+              if(depedency.type === 'commonjs') {
+                let processedFile = fs.readFileSync(depedency.path, {encoding: 'utf-8'})
+
+                output += `"${hash(depedency.path)}": (()=> {
+                  let module = {exports:"invalid"}
+                  ${processedFile}
+                  return module.exports
+                })()`
+              }
+            })
+
+            return output
+          })()
+        }
+      }
+      return files[file]
+    }
+  `
 
   dependencies.forEach((depedency) => {
+    if(depedency.type === 'commonjs')
+      return
+
     let varType = depedency.varType? depedency.varType : 'let'
 
     let processedFile = fs.readFileSync(depedency.path, {encoding: 'utf-8'})
 
-    processedFile = processedFile.replace(importES6Regexp, '').replace(importRequireRegexp, '')
+    processedFile = processedFile.replace(importES6Regexp, '')
+
+    processedFile = processedFile.replace(importRequireGroupRegexp, (match, variable, name, path)=> {
+      return `${variable} ${name} = require("${hash(generatePath(depedency.path, path))}")`
+    })
 
     if(depedency.type === 'es6' && depedency.name !== '*') {
       let exportStatements = Array.from(processedFile.matchAll(exportGroupRegexp))
@@ -38,33 +71,6 @@ export default function buildFile(config: configShape, dependencies: importedFil
           ${processedFile.replace(exportRegexp, '')}
 
           return ${returnStatement}
-        })()`
-    }
-
-    if(depedency.type === 'commonjs') {
-      let exportStatements = Array.from(processedFile.matchAll(exportGroupRegexp))
-
-      let returnStatement = '{'
-
-      exportStatements.forEach((exportStatement) => {
-        if(exportStatement[1] === 'function') {
-          returnStatement += exportStatement[2].replace('()', '')
-        } else {
-          returnStatement += exportStatement[2]
-        }
-
-        returnStatement += ', '
-      })
-
-      returnStatement += '}'
-
-      processedFile = `
-        ${varType} ${depedency.name} = (function () {
-          let module = {exports:"invalid"}
-
-          ${processedFile}
-
-          return module.exports
         })()`
     }
 

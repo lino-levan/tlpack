@@ -18,3 +18,4 @@ export interface importedFileShape {
     path: string;
     varType?: varType;
 }
+export declare function hash(string: string): string;

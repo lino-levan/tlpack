@@ -1,3 +1,5 @@
+import * as crypto from 'crypto';
+
 export const importES6GroupRegexp = /import\s(.+)\sfrom\s["'](.+)["']/gm
 export const importES6Regexp = /import\s.+\sfrom\s["'].+["']/gm
 export const importRequireGroupRegexp = /(const|var|let)\s(\S+)\s*=\s*require\(['"](.+)['"]\)/gm
@@ -19,4 +21,8 @@ export interface importedFileShape {
   name: string,
   path: string,
   varType?: varType
+}
+
+export function hash(string: string) {
+  return crypto.createHash('md5').update(string).digest('hex')
 }

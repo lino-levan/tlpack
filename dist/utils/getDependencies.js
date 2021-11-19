@@ -9,6 +9,7 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
     return to.concat(ar || Array.prototype.slice.call(from));
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.generatePath = void 0;
 var fs = require("fs");
 var Logger_1 = require("./Logger");
 var path = require("path");
@@ -25,6 +26,7 @@ function generatePath(from, name) {
     }
     return finalPath;
 }
+exports.generatePath = generatePath;
 function getDependencies(config, importedFile) {
     var logger = new Logger_1.Logger(config.verbose);
     if (fs.existsSync(importedFile.path)) {
