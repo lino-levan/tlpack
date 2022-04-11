@@ -2,7 +2,7 @@
 
 Welcome to my new personal project dubbed "thoughtlesspack".  
 
-The mission of this project is to finally build a packing software that isn't so hard to configure. The philosophy mainly centers around the idea of useful error messages and good defaults. At the moment, speed or compression isn't a top priority, though the final file does get run though GCC.  
+The mission of this project is to finally build a packing software that isn't so hard to configure. The philosophy mainly centers around the idea of useful error messages and good defaults. At the moment, speed or compression isn't a top priority, though the final file does get run though Uglify.  
 
 If you'd like to contribute, make a pull request and I'll go through changes when I have time.  
 
@@ -29,7 +29,6 @@ Default config if none specified:
   "entry": "./src/index.js", // where the bundler will start packing (filePath)
   "out": "./dist/index.js", // where the bundler will output the file (filePath)
   "verbose": false, // whether to bundler should print debug logs or not (boolean)
-  "compilationLevel": "SIMPLE" // determines how much to compile the output javascript with gcc ("WHITESPACE_ONLY", "SIMPLE", "ADVANCED")
 }
 ```
 
@@ -68,4 +67,7 @@ example.example()
 
 // import/require statements aren't currently implemented (I think)
 import example = require('./example')
+
+// node_modules are not implemented yet
+import module from 'module'
 ```

@@ -3,8 +3,14 @@ import * as fs from "fs"
 import * as esprima from 'esprima-next'
 import * as escodegen from 'escodegen'
 
+// @ts-ignore
+import * as minify from '@node-minify/core'
+// @ts-ignore
+import * as uglify from '@node-minify/uglify-js'
+
 import getConfig from "./getConfig"
 import { hash } from "./constants"
+import readFile from "./readFile"
 
 // function that creates a dist folder
 let config = getConfig()
@@ -21,9 +27,14 @@ export default function writeDist() {
 
   getFile(path.resolve(config.entry), true)
 
-  console.log(parts)
-
-  fs.writeFileSync(path.resolve(config.out), Array.from(parts).join("\n").trim())
+  minify({
+    compressor: uglify,
+    content: Array.from(parts).join("\n").trim(),
+    output: path.resolve(config.out),
+    callback: (err:string, min: string)=> {
+      fs.writeFileSync(path.resolve(config.out), min)
+    }
+  })
 }
 
 function getFile(fileName: string, main: boolean) {
@@ -42,7 +53,7 @@ function getFile(fileName: string, main: boolean) {
     let node = parsed.body[i]
 
     if(node.type === "ImportDeclaration") {
-      let p = path.join(fileName.split("/").slice(0, -1).join("/"), node.source.value as string) + ".js"
+      let p = readFile(node.source.value as string, fileName.split("/").slice(0, -1).join("/"))
       getFile(p, false)
 
       for(let i = 0; i < node.specifiers.length; i++) {
