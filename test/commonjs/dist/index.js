@@ -1,1 +1,0 @@
-function require(a){return{a34b91e8b29ab13359a236193cbab87d:function(){return function(){console.log("from the required function")}}()}[a]}var required=require("a34b91e8b29ab13359a236193cbab87d");required();

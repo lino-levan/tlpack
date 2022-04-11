@@ -1,1 +1,0 @@
-function require(a){return{}[a]}function functionFromNested(){console.log("function from nested")}var second=function(){return{functionFromSecond:function(){functionFromNested()}}}();function functionFromFirst(){console.log("from the first function")}functionFromFirst();second.functionFromSecond();
