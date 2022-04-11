@@ -15,6 +15,7 @@ exports.defaultConfig = void 0;
 var fs = require("fs");
 var path = require("path");
 var Logger_1 = require("./Logger");
+var ran = false;
 exports.defaultConfig = {
     entry: './src/index.js',
     out: './dist/index.js',
@@ -27,21 +28,26 @@ function getConfig() {
     if (configExists) {
         try {
             config = __assign(__assign({}, config), JSON.parse(fs.readFileSync('./tlpack.config.json', { encoding: 'utf-8' })));
-            Logger_1.default.success("found and loaded configuration file");
+            if (!ran)
+                Logger_1.default.success("found and loaded configuration file");
         }
         catch (err) {
-            Logger_1.default.error("config file isn't in JSON format");
+            if (!ran)
+                Logger_1.default.error("config file isn't in JSON format");
         }
         try {
             config.entry = fs.lstatSync(config.entry).isDirectory() ? path.join(config.entry, 'index.js') : config.entry;
         }
         catch (err) {
-            Logger_1.default.error("failed to load entry file, make sure you have it in the right spot");
+            if (!ran)
+                Logger_1.default.error("failed to load entry file, make sure you have it in the right spot");
         }
     }
     else {
-        Logger_1.default.warning("no configuration file found, consider creating a \"tlpack.config.json\" file");
+        if (!ran)
+            Logger_1.default.warning("no configuration file found, consider creating a \"tlpack.config.json\" file");
     }
+    ran = true;
     return config;
 }
 exports.default = getConfig;

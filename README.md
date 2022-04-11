@@ -35,11 +35,9 @@ Default config if none specified:
 
 ### Modules
 
-This bundler assumes that you are using the es6 and/or commonjs module syntax (You can use both).
+This bundler assumes that you are using the es6 module syntax (You can use both).
 
 This bundler also does not require specifying file extension.
-
-It also adds a * expression which removes the namespace
 
 ```js
 // import all functions (there should be no "export" statements in this file)
@@ -47,45 +45,27 @@ It also adds a * expression which removes the namespace
 import * from './example.js'
 example()
 
-// imports all of the exports as an object (currently doesn't have export default capability)
-import example from './example.js'
-example.example()
-
+// default exports are supported!
 import example from './example'
 example.example()
 
 // imports individual exports
-import { example } from './example.js'
-example()
-
 import { example } from './example'
 example()
 
-// imports value stored in module.exports
-const example = require('./example')
-example()
-
-var example = require('./example.js')
-example()
-
-let example = require('./example')
-example()
+// multiple imports are supported!
+import defaultImport, { exampleExport } from './example.js'
+defautlImport()
+exampleExport()
 ```
 
 The following are not valid yet
 
 ```js
-// aliases are not currently implemented
+// aliases are not currently implemented (I think)
 import * as example from './example.js'
 example.example()
 
-// multiple imports aren't currently implemented
-import defaultImport, { exampleExport } from './example.js'
-
-// default exports aren't currently implemented
-import exampleFunction from './example'
-exampleFunction()
-
-// import/require statements aren't currently implemented
+// import/require statements aren't currently implemented (I think)
 import example = require('./example')
 ```

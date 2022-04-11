@@ -1,8 +1,8 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import buildFile from './utils/buildFile';
 import getConfig from './utils/getConfig';
 import getDependencies from './utils/getDependencies';
+import writeDist from './utils/writeDist';
 import { Logger } from './utils/Logger';
 
 let config = getConfig()
@@ -14,15 +14,17 @@ function buildOnce() {
     logger.debug("loaded in verbose mode")
 
     logger.time("build finished in")
-    let dependencies = [{type: 'es6', name: '*', path: path.resolve(config.entry)}, ...getDependencies(config, {type: 'es6', name: '*', path:config.entry})].reverse()
 
-    logger.debug("got dependencies", dependencies.map((file)=>file.path).join(' '))
+    let dependencies = getDependencies(config.entry)
 
-    buildFile(config, dependencies)
-
+    writeDist(dependencies)
+    
     logger.timeEnd("build finished in")
   }
-  catch(err) {
+  catch(err: any) {
+    if(logger.verbose) {
+      logger.error(err.toString())
+    }
     logger.error("build failed")
   }
 }
