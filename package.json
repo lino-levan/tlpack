@@ -1,6 +1,6 @@
 {
   "name": "tlpack",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "",
   "repository": "git@github.com:lino-levan/tlpack.git",
   "main": "dist/index.js",

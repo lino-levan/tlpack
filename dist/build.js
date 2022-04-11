@@ -3,7 +3,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var fs = require("fs");
 var path = require("path");
 var getConfig_1 = require("./utils/getConfig");
-var getDependencies_1 = require("./utils/getDependencies");
 var writeDist_1 = require("./utils/writeDist");
 var Logger_1 = require("./utils/Logger");
 var config = (0, getConfig_1.default)();
@@ -13,8 +12,7 @@ function buildOnce() {
         logger.success("build started");
         logger.debug("loaded in verbose mode");
         logger.time("build finished in");
-        var dependencies = (0, getDependencies_1.default)(config.entry);
-        (0, writeDist_1.default)(dependencies);
+        (0, writeDist_1.default)();
         logger.timeEnd("build finished in");
     }
     catch (err) {

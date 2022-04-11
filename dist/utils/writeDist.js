@@ -8,13 +8,16 @@ var getConfig_1 = require("./getConfig");
 var constants_1 = require("./constants");
 // function that creates a dist folder
 var config = (0, getConfig_1.default)();
-function writeDist(dependencies) {
+var parts = new Set();
+function writeDist() {
     var dist = path.resolve('./dist');
     if (!fs.existsSync(dist)) {
         fs.mkdirSync(dist);
     }
-    var generated = getFile(path.resolve(config.entry), true);
-    fs.writeFileSync(path.resolve(config.out), generated.trim());
+    parts = new Set();
+    getFile(path.resolve(config.entry), true);
+    console.log(parts);
+    fs.writeFileSync(path.resolve(config.out), Array.from(parts).join("\n").trim());
 }
 exports.default = writeDist;
 function getFile(fileName, main) {
@@ -29,7 +32,7 @@ function getFile(fileName, main) {
         var node = parsed.body[i];
         if (node.type === "ImportDeclaration") {
             var p = path.join(fileName.split("/").slice(0, -1).join("/"), node.source.value) + ".js";
-            generated += getFile(p, false);
+            getFile(p, false);
             for (var i_1 = 0; i_1 < node.specifiers.length; i_1++) {
                 var specifier = node.specifiers[i_1];
                 if (specifier.type === "ImportDefaultSpecifier") {
@@ -63,5 +66,5 @@ function getFile(fileName, main) {
         generated += "}\n";
         generated += "}\n";
     }
-    return generated;
+    parts.add(generated);
 }

@@ -9,15 +9,21 @@ import { hash } from "./constants"
 // function that creates a dist folder
 let config = getConfig()
 
-export default function writeDist(dependencies: string[]) {
+let parts: Set<string> = new Set()
+
+export default function writeDist() {
   let dist = path.resolve('./dist')
   if(!fs.existsSync(dist)) {
     fs.mkdirSync(dist)
   }
 
-  let generated = getFile(path.resolve(config.entry), true)
+  parts = new Set()
 
-  fs.writeFileSync(path.resolve(config.out), generated.trim())
+  getFile(path.resolve(config.entry), true)
+
+  console.log(parts)
+
+  fs.writeFileSync(path.resolve(config.out), Array.from(parts).join("\n").trim())
 }
 
 function getFile(fileName: string, main: boolean) {
@@ -37,7 +43,7 @@ function getFile(fileName: string, main: boolean) {
 
     if(node.type === "ImportDeclaration") {
       let p = path.join(fileName.split("/").slice(0, -1).join("/"), node.source.value as string) + ".js"
-      generated += getFile(p, false)
+      getFile(p, false)
 
       for(let i = 0; i < node.specifiers.length; i++) {
         let specifier = node.specifiers[i]
@@ -69,5 +75,5 @@ function getFile(fileName: string, main: boolean) {
     generated += `}\n`
   }
 
-  return generated
+  parts.add(generated)
 }

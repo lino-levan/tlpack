@@ -1,1 +1,1 @@
-export default function writeDist(dependencies: string[]): void;
+export default function writeDist(): void;

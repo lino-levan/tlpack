@@ -14,4 +14,4 @@ export function hash(string: string) {
   return "generated_"+crypto.createHash('md5').update(string).digest('hex')
 }
 
-export const version = '1.1.0'
+export const version = '1.1.1'

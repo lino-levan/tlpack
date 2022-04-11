@@ -1,7 +1,6 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import getConfig from './utils/getConfig';
-import getDependencies from './utils/getDependencies';
 import writeDist from './utils/writeDist';
 import { Logger } from './utils/Logger';
 
@@ -15,9 +14,7 @@ function buildOnce() {
 
     logger.time("build finished in")
 
-    let dependencies = getDependencies(config.entry)
-
-    writeDist(dependencies)
+    writeDist()
     
     logger.timeEnd("build finished in")
   }

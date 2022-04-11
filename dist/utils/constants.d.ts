@@ -7,4 +7,4 @@ export interface configShape {
     verbose: boolean;
 }
 export declare function hash(string: string): string;
-export declare const version = "1.1.0";
+export declare const version = "1.1.1";
